@@ -1,12 +1,14 @@
 {
-  "name": "creatoros-scaffold",
+  "name": "creatoros",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "create-assistant": "tsx scripts/create-assistant.ts",
+    "scrape-creator": "tsx scripts/scrape-creator.ts"
   },
   "dependencies": {
     "@upstash/redis": "^1.37.0",
@@ -28,6 +30,7 @@
     "eslint-config-next": "16.2.4",
     "jsdom": "^29.0.2",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5",
     "vitest": "^4.1.5"
   }
