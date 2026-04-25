@@ -1,0 +1,43 @@
+{
+  "slug": "demo",
+  "name": "Demo Creator",
+  "assistantId": "YOUR_OPENAI_ASSISTANT_ID",
+  "bio": "Health & wellness creator sharing what actually works",
+  "products": [
+    {
+      "id": "morning-stack",
+      "name": "Morning Supplement Stack",
+      "category": "supplements",
+      "description": "The exact morning stack I take daily — Vitamin D3, Omega-3, and Magnesium",
+      "price": "$45/mo",
+      "imageUrl": "https://placehold.co/200x200/e2e8f0/64748b?text=Stack",
+      "affiliateUrl": "https://example.com/morning-stack"
+    },
+    {
+      "id": "sleep-formula",
+      "name": "Sleep Optimization Formula",
+      "category": "supplements",
+      "description": "Magnesium glycinate + L-theanine for deep sleep",
+      "price": "$35/mo",
+      "imageUrl": "https://placehold.co/200x200/e2e8f0/64748b?text=Sleep",
+      "affiliateUrl": "https://example.com/sleep-formula"
+    },
+    {
+      "id": "fitness-program",
+      "name": "12-Week Transformation Program",
+      "category": "fitness",
+      "description": "My complete workout + nutrition plan with weekly check-ins",
+      "price": "$99",
+      "imageUrl": "https://placehold.co/200x200/e2e8f0/64748b?text=Program",
+      "affiliateUrl": "https://example.com/fitness-program"
+    }
+  ],
+  "rateLimits": {
+    "messagesPerHourPerIp": 20,
+    "dailySpendCapUsd": 10
+  },
+  "socialLinks": {
+    "instagram": "https://instagram.com/democreator",
+    "website": "https://democreator.com"
+  }
+}
