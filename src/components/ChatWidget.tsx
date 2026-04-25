@@ -184,13 +184,13 @@ export function ChatWidget({ creatorSlug, creatorName, creatorBio }: ChatWidgetP
                   : "bg-white text-gray-900 border border-gray-200"
               }`}
             >
-              {msg.content || (isLoading && msg.role === "assistant" && (
+              {!msg.content && isLoading && msg.role === "assistant" && (
                 <span className="inline-flex gap-1">
                   <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
                   <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
                   <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
                 </span>
-              ))}
+              )}
               {msg.content && <p className="whitespace-pre-wrap">{msg.content}</p>}
               {msg.productCards?.map((product) => (
                 <ProductCard
@@ -246,6 +246,9 @@ export function ChatWidget({ creatorSlug, creatorName, creatorBio }: ChatWidgetP
             Send
           </button>
         </div>
+        <p className="text-center text-[10px] text-gray-400 mt-2">
+          AI-generated responses. Not medical advice. Conversations may be used to improve this experience.
+        </p>
       </div>
     </div>
   );

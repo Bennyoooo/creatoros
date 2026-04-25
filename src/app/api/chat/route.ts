@@ -54,14 +54,14 @@ export async function POST(request: NextRequest) {
     }
 
     const sessionId = await getOrCreateSessionId();
-    let threadId = getThreadId(sessionId, creatorSlug);
+    let threadId = await getThreadId(sessionId, creatorSlug);
 
     const openai = getOpenAI();
 
     if (!threadId) {
       const thread = await openai.beta.threads.create();
       threadId = thread.id;
-      setThreadId(sessionId, creatorSlug, threadId);
+      await setThreadId(sessionId, creatorSlug, threadId);
     }
 
     await openai.beta.threads.messages.create(threadId, {

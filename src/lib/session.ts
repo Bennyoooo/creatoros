@@ -1,11 +1,22 @@
 import { cookies } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
+import { Redis } from "@upstash/redis";
 
 const SESSION_COOKIE = "creatoros_session";
 const SESSION_MAX_AGE = 7 * 24 * 60 * 60;
+const THREAD_TTL = 7 * 24 * 60 * 60;
 
-// In-memory store for dev/validation. Replace with Upstash Redis for production.
-const threadStore = new Map<string, string>();
+const inMemoryStore = new Map<string, string>();
+
+function getRedis(): Redis | null {
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    return new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+  }
+  return null;
+}
 
 export async function getOrCreateSessionId(): Promise<string> {
   const cookieStore = await cookies();
@@ -24,10 +35,21 @@ export async function getOrCreateSessionId(): Promise<string> {
   return sessionId;
 }
 
-export function getThreadId(sessionId: string, creatorSlug: string): string | null {
-  return threadStore.get(`${sessionId}:${creatorSlug}`) ?? null;
+export async function getThreadId(sessionId: string, creatorSlug: string): Promise<string | null> {
+  const key = `thread:${sessionId}:${creatorSlug}`;
+  const redis = getRedis();
+  if (redis) {
+    return await redis.get<string>(key);
+  }
+  return inMemoryStore.get(key) ?? null;
 }
 
-export function setThreadId(sessionId: string, creatorSlug: string, threadId: string): void {
-  threadStore.set(`${sessionId}:${creatorSlug}`, threadId);
+export async function setThreadId(sessionId: string, creatorSlug: string, threadId: string): Promise<void> {
+  const key = `thread:${sessionId}:${creatorSlug}`;
+  const redis = getRedis();
+  if (redis) {
+    await redis.set(key, threadId, { ex: THREAD_TTL });
+  } else {
+    inMemoryStore.set(key, threadId);
+  }
 }
