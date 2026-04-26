@@ -3,9 +3,14 @@ import OpenAI from "openai";
 import { getCreatorConfig, getProductById } from "@/lib/creators";
 import { checkRateLimit } from "@/lib/rate-limiter";
 import { getOrCreateSessionId, getThreadId, setThreadId } from "@/lib/session";
+import { getProxyFetch } from "@/lib/proxy-fetch";
 
 function getOpenAI() {
-  return new OpenAI();
+  const proxyFetch = getProxyFetch();
+  return new OpenAI({
+    timeout: 300_000,
+    ...(proxyFetch ? { fetch: proxyFetch } : {}),
+  });
 }
 
 const RECOMMEND_PRODUCT_FUNCTION: OpenAI.FunctionDefinition = {
@@ -185,7 +190,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (err) {
-    console.error("[CHAT API ERROR]", err);
-    return Response.json({ error: "api_error" }, { status: 500 });
+    console.error("[CHAT API ERROR]", err instanceof Error ? err.stack : err);
+    return Response.json({ error: "api_error", detail: err instanceof Error ? err.message : "unknown" }, { status: 500 });
   }
 }

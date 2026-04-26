@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import fs from "fs";
 import path from "path";
 import { CreatorConfig, Product } from "../src/lib/types";
+import { getProxyFetch } from "../src/lib/proxy-fetch";
 
 interface ScrapedContent {
   source: string;
@@ -167,7 +168,11 @@ async function generateCreatorConfig(
     };
   }
 
-  const openai = new OpenAI();
+  const proxyFetch = getProxyFetch();
+  const openai = new OpenAI({
+    timeout: 300_000,
+    ...(proxyFetch ? { fetch: proxyFetch } : {}),
+  });
 
   console.log("\nAnalyzing content with AI to generate creator config...");
 

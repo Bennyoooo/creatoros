@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import fs from "fs";
 import path from "path";
 import { CreatorConfig } from "../src/lib/types";
+import { getProxyFetch } from "../src/lib/proxy-fetch";
 
 async function main() {
   const slug = process.argv[2];
@@ -18,7 +19,11 @@ async function main() {
   }
 
   const config: CreatorConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
-  const openai = new OpenAI();
+  const proxyFetch = getProxyFetch();
+  const openai = new OpenAI({
+    timeout: 300_000,
+    ...(proxyFetch ? { fetch: proxyFetch } : {}),
+  });
 
   const productList = config.products
     .map((p) => `- ${p.name} (ID: ${p.id}, ${p.category}): ${p.description} — ${p.price}`)
